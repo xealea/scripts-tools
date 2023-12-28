@@ -39,7 +39,7 @@ notify_user() {
 # Countdown
 countdown() {
   for ((sec = $1; sec > 0; sec--)); do
-    dunstify -t 1000 --replace=699 -i /usr/share/archcraft/icons/dunst/timer.png "Starting in : $sec"
+    $notify_cmd -u low "Starting in : $sec"
     sleep 1
   done
 }
