@@ -19,7 +19,7 @@
 
 # Executables
 slop_cmd="slop -f \"%x %y %w %h %g %i\""
-ffmpeg_cmd="ffmpeg -framerate 25"
+ffmpeg_cmd="ffmpeg -framerate 60"
 
 # File and directory
 time=$(date +%Y-%m-%d-%H-%M-%S)
