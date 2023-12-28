@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2199
+# shellcheck disable=SC2086
+# shellcheck source=/dev/null
+#
+# Copyright (C) 2023-02 xealea <xealea@proton.me>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Executables
+slop_cmd="slop -f \"%x %y %w %h %g %i\""
+ffmpeg_cmd="ffmpeg -framerate 25"
+
+# File and directory
+time=$(date +%Y-%m-%d-%H-%M-%S)
+dir="$(xdg-user-dir VIDEOS)/Screenrecorder"
+file="Capture_${time}.mp4"
+
+# Notify user
+notify_cmd="notify-send"
+notify_user() {
+  if [[ -e "$dir/$file" ]]; then
+    $notify_cmd -u low "Saved in $dir"
+  else
+    $notify_cmd -u low "Video Deleted."
+  fi
+}
+
+# Countdown
+countdown() {
+  for ((sec = $1; sec > 0; sec--)); do
+    dunstify -t 1000 --replace=699 -i /usr/share/archcraft/icons/dunst/timer.png "Starting in : $sec"
+    sleep 1
+  done
+}
+
+# Capture function
+rec_screen() {
+  countdown 3
+  $ffmpeg_cmd -video_size $screen -f x11grab -i :0.0+0,0 "${dir}/${file}"
+  notify_user
+}
+
+rec_area() {
+  get_win_data=$($slop_cmd) || exit 1
+  read -r X Y W H G ID <<< "$get_win_data"
+
+  countdown 3
+  $ffmpeg_cmd -video_size ${W}x${H} -f x11grab -i :0.0+${X},${Y} "${dir}/${file}"
+  notify_user
+}
+
+# Main script
+if [[ ! -d "$dir" ]]; then mkdir -p "$dir"; fi
+
+case "$1" in
+  --screen) rec_screen ;;
+  --area) rec_area ;;
+  --screen-na) rec_screen ;;
+  --area-na) rec_area ;;
+  *) echo -e "Available Options: --screen --screen-na --area --area-na" ;;
+esac
+
+exit 0
