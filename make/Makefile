@@ -4,9 +4,9 @@ CFLAGS = -std=c11
 CXXFLAGS = -std=c++11
 
 SRC_FILES = $(wildcard *.c *.cpp)
-EXE_FILES = $(patsubst %.c,%,$(filter %.c,$(SRC_FILES))) $(patsubst %.cpp,%,$(filter %.cpp,$(SRC_FILES)))
+GCC_FILES = $(patsubst %.c,%,$(filter %.c,$(SRC_FILES))) $(patsubst %.cpp,%,$(filter %.cpp,$(SRC_FILES)))
 
-all: $(EXE_FILES)
+all: $(GCC_FILES)
 
 %: %.c
 	$(CC) $(CFLAGS) -o $@ $<
@@ -15,4 +15,4 @@ all: $(EXE_FILES)
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 clean:
-	rm -f $(EXE_FILES)
+	rm -f $(GCC_FILES)
