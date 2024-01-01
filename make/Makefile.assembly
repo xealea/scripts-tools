@@ -1,14 +1,9 @@
-# Makefile for building ASM files with TASM and TLINK in DOSBox on Linux
-
-# List of ASM files to build
 ASM_FILES := $(wildcard *.asm)
 SRC_FILES := $(ASM_FILES:.asm=)
 
-# Compiler and linker commands
 TASM := tasm
 TLINK := tlink
 
-# DOSBox command
 DOSBOX := dosbox
 
 all: $(SRC_FILES)
